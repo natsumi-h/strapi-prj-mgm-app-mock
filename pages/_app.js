@@ -1,7 +1,20 @@
-import '../styles/globals.css'
+import * as React from "react";
+import PropTypes from "prop-types";
+import Head from "next/head";
+import { AuthProvider } from "../context/AuthContext";
+import "../styles/globals.css";
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+export default function MyApp({ Component, pageProps }) {
+  return (
+    <AuthProvider>
+      <Head />
+      <Component {...pageProps} />
+    </AuthProvider>
+  );
 }
 
-export default MyApp
+MyApp.propTypes = {
+  Component: PropTypes.elementType.isRequired,
+  emotionCache: PropTypes.object,
+  pageProps: PropTypes.object.isRequired,
+};
