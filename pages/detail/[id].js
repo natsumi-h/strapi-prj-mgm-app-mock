@@ -10,7 +10,8 @@ import Link from "next/link";
 
 export default function BasicList(props) {
   const token = props.token;
-  console.log(token);
+  // console.log(token);
+  console.log(props);
 
   const router = useRouter();
   const editEvent = (e) => {
@@ -82,9 +83,9 @@ export default function BasicList(props) {
                 PM
               </dt>
               <dd className="text-lg font-semibold">
-                {props.project.data.attributes.project_manager.data
-                  ? props.project.data.attributes.project_manager.data
-                      .attributes.Name
+                {props.project.data.attributes.pm.data
+                  ? props.project.data.attributes.pm.data
+                      .attributes.username
                   : ""}
               </dd>
             </div>

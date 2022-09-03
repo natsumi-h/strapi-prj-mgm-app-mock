@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { NEXT_URL } from "../config/index";
-import { data } from "autoprefixer";
+// import { data } from "autoprefixer";
 
 const AuthContext = createContext();
 

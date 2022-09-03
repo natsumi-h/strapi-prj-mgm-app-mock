@@ -76,8 +76,8 @@ export default function ProjectsList(projects) {
                     {project.attributes.projectName}
                   </td>
                   <td className="py-4 px-6">
-                    {project.attributes.project_manager.data
-                      ? project.attributes.project_manager.data.attributes.Name
+                    {project.attributes.pm.data
+                      ? project.attributes.pm.data.attributes.username
                       : ""}
                   </td>
                   <td className="py-4 px-6">{project.attributes.status}</td>

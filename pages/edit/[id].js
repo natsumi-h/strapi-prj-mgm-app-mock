@@ -10,9 +10,8 @@ import cookie from "cookie";
 export default function EditProjectPage(props) {
   const id = props.project.data.id;
   const projectData = props.project.data.attributes;
-  const pmsList = props.pms.data;
+  const pmsList = props.pms;
   const token = props.token;
-  console.log(token);
   const router = useRouter();
 
   const [values, setValues] = useState({
@@ -21,8 +20,8 @@ export default function EditProjectPage(props) {
     area: projectData.area,
     branch: projectData.branch,
     sales: projectData.sales,
-    project_manager: projectData.project_manager.data
-      ? projectData.project_manager.data.id
+    project_manager: projectData.pm.data
+      ? projectData.pm.data.id
       : "",
   });
 
@@ -87,7 +86,7 @@ export default function EditProjectPage(props) {
             <option hidden> 選択してください</option>
             {pmsList.map((pm) => (
               <option key={pm.id} value={pm.id}>
-                {pm.attributes.Name}
+                {pm.username}
               </option>
             ))}
           </select>
@@ -105,9 +104,11 @@ export default function EditProjectPage(props) {
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
             <option hidden> 選択してください</option>
-            <option value="statusA">statusA</option>
-            <option value="statusB">statusB</option>
-            <option value="statusC">statusC</option>
+            <option value="Lead">Lead</option>
+            <option value="Opportunity">Opportunity</option>
+            <option value="Dealed">Dealed</option>
+            <option value="Closed">Closed</option>
+            <option value="Lost">Lost</option>
           </select>
         </div>
 
@@ -123,9 +124,9 @@ export default function EditProjectPage(props) {
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
             <option hidden> 選択してください</option>
-            <option value="エリアA">エリアA</option>
-            <option value="エリアB">エリアB</option>
-            <option value="エリアC">エリアC</option>
+            <option value="Area A">Area A</option>
+            <option value="Area B">Area B</option>
+            <option value="Area C">Area C</option>
           </select>
         </div>
 
@@ -216,7 +217,7 @@ export async function getServerSideProps(context) {
   });
   const project = await projectRes.json();
 
-  const resPms = await fetch(`${API_URL}/project-managers`, {
+  const resPms = await fetch(`${API_URL}/users`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

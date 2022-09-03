@@ -7,8 +7,9 @@ import cookie from "cookie";
 import Footer from "../components/Footer";
 
 export default function CreateProjectPage(props) {
-  const pmsList = props.pms.data;
+  const pmsList = props.pms;
   const token = props.token;
+  console.log(props);
 
   const [values, setValues] = useState({
     projectName: "",
@@ -88,7 +89,7 @@ export default function CreateProjectPage(props) {
             <option hidden> Select option</option>
             {pmsList.map((pm) => (
               <option key={pm.id} value={pm.id}>
-                {pm.attributes.Name}
+                {pm.username}
               </option>
             ))}
           </select>
@@ -106,9 +107,11 @@ export default function CreateProjectPage(props) {
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
             <option hidden> Select option</option>
-            <option value="statusA">statusA</option>
-            <option value="statusB">statusB</option>
-            <option value="statusC">statusC</option>
+            <option value="Lead">Lead</option>
+            <option value="Opportunity">Opportunity</option>
+            <option value="Dealed">Dealed</option>
+            <option value="Closed">Closed</option>
+            <option value="Lost">Lost</option>
           </select>
         </div>
 
@@ -124,9 +127,9 @@ export default function CreateProjectPage(props) {
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
             <option hidden> Select option</option>
-            <option value="エリアA">エリアA</option>
-            <option value="エリアB">エリアB</option>
-            <option value="エリアC">エリアC</option>
+            <option value="Area A">Area A</option>
+            <option value="Area B">Area B</option>
+            <option value="Area C">Area C</option>
           </select>
         </div>
 
@@ -180,7 +183,7 @@ export default function CreateProjectPage(props) {
 }
 
 export async function getServerSideProps({ req }) {
-  const res = await fetch(`${API_URL}/project-managers`);
+  const res = await fetch(`${API_URL}/users`);
 
   const pms = await res.json();
   console.log(pms);
