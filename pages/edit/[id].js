@@ -20,9 +20,7 @@ export default function EditProjectPage(props) {
     area: projectData.area,
     branch: projectData.branch,
     sales: projectData.sales,
-    project_manager: projectData.pm.data
-      ? projectData.pm.data.id
-      : "",
+    pm: projectData.pm.data ? projectData.pm.data.id : "",
   });
 
   const handleSubmit = async (e) => {
@@ -77,9 +75,9 @@ export default function EditProjectPage(props) {
             PM
           </label>
           <select
-            id="project_manager"
-            name="project_manager"
-            value={values.project_manager}
+            id="pm"
+            name="pm"
+            value={values.pm}
             onChange={handleInputChange}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 appea"
           >

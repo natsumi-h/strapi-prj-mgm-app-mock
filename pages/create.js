@@ -17,7 +17,7 @@ export default function CreateProjectPage(props) {
     area: "",
     branch: "",
     sales: "",
-    project_manager: "",
+    pm: "",
   });
 
   const router = useRouter();
@@ -43,7 +43,7 @@ export default function CreateProjectPage(props) {
       // console.log(error.message)
     } else {
       const newProject = await res.json();
-      // console.log(newProject.data.id);
+      console.log(newProject);
       // router.push(`/detail/${newProject.data.id}`);
       router.push("/");
     }
@@ -80,9 +80,9 @@ export default function CreateProjectPage(props) {
             PM
           </label>
           <select
-            id="project_manager"
-            name="project_manager"
-            value={values.project_manager}
+            id="pm"
+            name="pm"
+            value={values.pm}
             onChange={handleInputChange}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 appea"
           >
