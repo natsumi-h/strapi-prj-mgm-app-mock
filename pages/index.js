@@ -13,7 +13,14 @@ import Footer from "../components/Footer";
 
 export default function ProjectsList(projects) {
   const projectsList = projects.projects.data;
-  // console.log(projectsList);
+  console.log(projectsList);
+
+  const sortedProjectsList = projectsList.sort((a, b) => {
+    a = new Date(a.attributes.updatedAt);
+    b = new Date(b.attributes.updatedAt);
+    return b-a
+  });
+  console.log(sortedProjectsList);
 
   const { user } = useContext(AuthContext);
   // console.log(user);
@@ -58,7 +65,7 @@ export default function ProjectsList(projects) {
           </thead>
 
           <tbody>
-            {projectsList.map((project) => (
+            {sortedProjectsList.map((project) => (
               <Link
                 key={project.id}
                 className="cursor-pointer"
@@ -75,11 +82,11 @@ export default function ProjectsList(projects) {
                   <td className="py-4 px-6">
                     {project.attributes.projectName}
                   </td>
-                  <td className="py-4 px-6">
+                  {/* <td className="py-4 px-6">
                     {project.attributes.pm.data
                       ? project.attributes.pm.data.attributes.username
                       : ""}
-                  </td>
+                  </td> */}
                   <td className="py-4 px-6">{project.attributes.status}</td>
                   <td className="py-4 px-6">{project.attributes.area}</td>
                   <td className="py-4 px-6">{project.attributes.branch}</td>
@@ -102,6 +109,7 @@ export async function getServerSideProps({ req }) {
     return cookie.parse(req ? req.headers.cookie || "" : "");
   };
   const { token } = parseCookies(req);
+  console.log({ token });
 
   const res = await fetch(`${API_URL}/projects?populate=*`, {
     headers: {
@@ -110,6 +118,7 @@ export async function getServerSideProps({ req }) {
   });
   const projects = await res.json();
   // console.log(projects.error.name);
+  console.log(projects);
 
   return {
     props: {
