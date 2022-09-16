@@ -13,19 +13,28 @@ import Footer from "../components/Footer";
 
 export default function ProjectsList(projects) {
   const projectsList = projects.projects.data;
-  console.log(projectsList);
-
-  const sortedProjectsList = projectsList.sort((a, b) => {
-    a = new Date(a.attributes.updatedAt);
-    b = new Date(b.attributes.updatedAt);
-    return b-a
-  });
-  console.log(sortedProjectsList);
+  // console.log(projectsList);
 
   const { user } = useContext(AuthContext);
   // console.log(user);
   //const router = useRouter();
   //!user &&  router.push("/account/login");
+
+  //案件一覧を更新日順に取得
+  // const sortedProjectsList = projectsList.sort((a, b) => {
+  //   a = new Date(a.attributes.updatedAt);
+  //   b = new Date(b.attributes.updatedAt);
+  //   return b - a;
+  // });
+
+  const sortedProjectsList = !user
+    ? null
+    : projectsList.sort((a, b) => {
+        a = new Date(a.attributes.updatedAt);
+        b = new Date(b.attributes.updatedAt);
+        return b - a;
+      });
+  // console.log(sortedProjectsList);
 
   return user ? (
     <>
