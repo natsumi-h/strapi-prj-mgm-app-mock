@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { API_URL } from "../config";
 import Header from "../components/Header";
 import cookie from "cookie";
