@@ -3,7 +3,7 @@ import cookie from "cookie";
 import AuthContext from "../context/AuthContext";
 import Footer from "../components/Footer";
 import { useContext } from "react";
-import Pagination from "../components/pagination";
+import Pagination from "../components/Pagination";
 import ProjectList from "../components/ProjectList";
 
 export default function ProjectsList(props) {
