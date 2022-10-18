@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import { useContext } from "react";
 import Pagination from "../components/Pagination";
 import ProjectList from "../components/ProjectList";
+import Filter from "../components/Filter";
 
 export default function ProjectsList(props) {
   const meta = props.meta;
@@ -13,6 +14,7 @@ export default function ProjectsList(props) {
   return user ? (
     <>
       <Header />
+      <Filter props={props} />
       <ProjectList props={props} />
       <Pagination props={props} />
       <Footer />

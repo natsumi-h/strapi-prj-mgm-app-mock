@@ -4,7 +4,7 @@ import Head from "next/head";
 import { AuthProvider } from "../context/AuthContext";
 import "../styles/globals.css";
 import { createContext, useState } from "react";
-import { useSortSwitcher } from "../hooks/useSortSwitcher";
+import { useEndpointSwitcher } from "../hooks/useEndpointSwitcher";
 
 export const PageNumberContext = createContext({
   pageNumber: "1",
@@ -15,13 +15,13 @@ export const PageNumberContext = createContext({
 
 export default function MyApp({ Component, pageProps }) {
   const [pageNumber, setPageNumber] = useState("1");
-  const sortSwitcher = useSortSwitcher();
+  const endpointSwitcher = useEndpointSwitcher();
 
   return (
     <AuthProvider>
       <PageNumberContext.Provider value={{ pageNumber, setPageNumber }}>
         <Head />
-        <Component {...pageProps} {...sortSwitcher} />
+        <Component {...pageProps} {...endpointSwitcher} />
       </PageNumberContext.Provider>
     </AuthProvider>
   );

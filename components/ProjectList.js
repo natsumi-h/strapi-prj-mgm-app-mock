@@ -1,6 +1,6 @@
 import Link from "next/link";
 import dayjs from "dayjs";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { PageNumberContext } from "../pages/_app";
 import { API_URL } from "../config";
 import { useFetcher } from "../hooks/useFetcher";
@@ -11,7 +11,26 @@ export default function ProjectList(props) {
   const setAscDesc = props.props.setAscDesc;
   const { pageNumber, setPageNumber } = useContext(PageNumberContext);
   const token = props.props.token;
-  const url = `${API_URL}/projects?populate=*&sort[0]=${props.props.orderBy}:${props.props.ascDesc}&pagination[page]=${pageNumber}&pagination[pageSize]=10`;
+  const [endpointUrl, setEndpointUrl] = useState(
+    `${API_URL}/projects?populate=*&sort[0]=${props.props.orderBy}:${props.props.ascDesc}`
+  );
+  useEffect(() => {
+    setEndpointUrl(() => {
+      if (props.props.endpointType == "search") {
+        return `${API_URL}/projects?populate=*&filters[${props.props.field}][$eqi]=${props.props.value}`;
+      } else if (props.props.endpointType == "sort") {
+        return `${API_URL}/projects?populate=*&sort[0]=${props.props.orderBy}:${props.props.ascDesc}&pagination[page]=${pageNumber}&pagination[pageSize]=10`;
+      }
+    });
+  }, [
+    props.props.field,
+    props.props.value,
+    props.props.orderBy,
+    props.props.ascDesc,
+    pageNumber,
+  ]);
+  const url = endpointUrl;
+
   const { data, error } = useFetcher(url, token);
   const projectsList = data ? data.data : "";
 
@@ -35,6 +54,7 @@ export default function ProjectList(props) {
       return props.props.ascDescCreatedAt;
     });
   }, [props.props.ascDescCreatedAt]);
+  console.log(data);
 
   // https://tailwindui.com/components/application-ui/lists/tables
   if (!error && !data) {
@@ -48,7 +68,9 @@ export default function ProjectList(props) {
                   <div className="flex items-center gap-2 justify-center">
                     <p>ID</p>
                     <button
-                      onClick={() => props.props.handleSortSwitcher("id")}
+                      onClick={(e) =>
+                        props.props.handleEndpointSwitcher("id", "sort")
+                      }
                     >
                       {props.props.ascDescId == "desc" ? (
                         <IoIosArrowUp />
@@ -62,8 +84,8 @@ export default function ProjectList(props) {
                   <div className="flex items-center gap-2 justify-center">
                     <p>Created On</p>
                     <button
-                      onClick={() =>
-                        props.props.handleSortSwitcher("createdAt")
+                      onClick={(e) =>
+                        props.props.handleEndpointSwitcher("createdAt", "sort")
                       }
                     >
                       {props.props.ascDescCreatedAt == "desc" ? (
@@ -78,8 +100,8 @@ export default function ProjectList(props) {
                   <div className="flex items-center gap-2 justify-center">
                     <p>Updated On</p>
                     <button
-                      onClick={() =>
-                        props.props.handleSortSwitcher("updatedAt")
+                      onClick={(e) =>
+                        props.props.handleEndpointSwitcher("updatedAt", "sort")
                       }
                     >
                       {props.props.ascDescUpdatedAt == "desc" ? (
@@ -113,7 +135,9 @@ export default function ProjectList(props) {
                   <div className="flex items-center gap-2 justify-center">
                     <p>Sales</p>
                     <button
-                      onClick={() => props.props.handleSortSwitcher("sales")}
+                      onClick={(e) =>
+                        props.props.handleEndpointSwitcher("sales", "sort")
+                      }
                     >
                       {props.props.ascDescSales == "desc" ? (
                         <IoIosArrowUp />
@@ -142,7 +166,11 @@ export default function ProjectList(props) {
               <th scope="col" className="text-center py-3 px-6">
                 <div className="flex items-center gap-2 justify-center">
                   <p>ID</p>
-                  <button onClick={() => props.props.handleSortSwitcher("id")}>
+                  <button
+                    onClick={(e) =>
+                      props.props.handleEndpointSwitcher("id", "sort")
+                    }
+                  >
                     {props.props.ascDescId == "desc" ? (
                       <IoIosArrowUp />
                     ) : (
@@ -155,7 +183,9 @@ export default function ProjectList(props) {
                 <div className="flex items-center gap-2 justify-center">
                   <p>Created On</p>
                   <button
-                    onClick={() => props.props.handleSortSwitcher("createdAt")}
+                    onClick={(e) =>
+                      props.props.handleEndpointSwitcher("createdAt", "sort")
+                    }
                   >
                     {props.props.ascDescCreatedAt == "desc" ? (
                       <IoIosArrowUp />
@@ -169,7 +199,9 @@ export default function ProjectList(props) {
                 <div className="flex items-center gap-2 justify-center">
                   <p>Updated On</p>
                   <button
-                    onClick={() => props.props.handleSortSwitcher("updatedAt")}
+                    onClick={(e) =>
+                      props.props.handleEndpointSwitcher("updatedAt", "sort")
+                    }
                   >
                     {props.props.ascDescUpdatedAt == "desc" ? (
                       <IoIosArrowUp />
@@ -202,7 +234,9 @@ export default function ProjectList(props) {
                 <div className="flex items-center gap-2 justify-center">
                   <p>Sales</p>
                   <button
-                    onClick={() => props.props.handleSortSwitcher("sales")}
+                    onClick={(e) =>
+                      props.props.handleEndpointSwitcher("sales", "sort")
+                    }
                   >
                     {props.props.ascDescSales == "desc" ? (
                       <IoIosArrowUp />

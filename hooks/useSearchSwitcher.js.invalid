@@ -1,0 +1,28 @@
+import { useState } from "react";
+import { API_URL } from "../config";
+
+export const useSearchSwitcher = () => {
+  const [field, setField] = useState("");
+  const [value, setValue] = useState("");
+  const [searchUrl, setSearchUrl] = useState(
+    `${API_URL}/projects?filters[branch][$eqi]=A-1`
+  );
+  const handleSearchSwitcher = (e, endpointType) => {
+    if (endpointType == "search") {
+      setField(() => {
+        return e.target.id;
+      });
+      setValue(() => {
+        return e.target.value;
+      });
+    }
+  };
+
+  return {
+    handleSearchSwitcher,
+    searchUrl,
+    field,
+    value,
+    setSearchUrl,
+  };
+};

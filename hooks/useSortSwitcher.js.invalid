@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API_URL } from "../config";
 
 export const useSortSwitcher = () => {
   const [orderBy, setOrderBy] = useState("updatedAt");
@@ -7,11 +8,15 @@ export const useSortSwitcher = () => {
   const [ascDescCreatedAt, setAscDescCreatedAt] = useState("desc");
   const [ascDescUpdatedAt, setAscDescUpdatedAt] = useState("desc");
   const [ascDescSales, setAscDescSales] = useState("desc");
+  const [testUrl, setTestUrl] = useState(
+    `${API_URL}/projects?populate=*&sort[0]=updatedAt:`
+  );
 
   const handleSortSwitcher = (e) => {
     setOrderBy(() => {
       return e;
     });
+
     if (e == "id") {
       setAscDescId((prevAscDescId) => {
         if (prevAscDescId == "asc") {
@@ -19,6 +24,9 @@ export const useSortSwitcher = () => {
         } else {
           return "asc";
         }
+      });
+      setTestUrl(() => {
+        return `${API_URL}/projects?populate=*&sort[0]=id:`;
       });
     } else if (e == "createdAt") {
       setAscDescCreatedAt((prevAscDescCreatedAt) => {
@@ -28,6 +36,9 @@ export const useSortSwitcher = () => {
           return "asc";
         }
       });
+      setTestUrl(() => {
+        return `${API_URL}/projects?populate=*&sort[0]=createdAt:`;
+      });
     } else if (e == "updatedAt") {
       setAscDescUpdatedAt((prevAscDescUpdatedAt) => {
         if (prevAscDescUpdatedAt == "asc") {
@@ -36,6 +47,9 @@ export const useSortSwitcher = () => {
           return "asc";
         }
       });
+      setTestUrl(() => {
+        return `${API_URL}/projects?populate=*&sort[0]=updatedAt:`;
+      });
     } else if (e == "sales") {
       setAscDescSales((prevAscDescSales) => {
         if (prevAscDescSales == "asc") {
@@ -43,6 +57,9 @@ export const useSortSwitcher = () => {
         } else {
           return "asc";
         }
+      });
+      setTestUrl(() => {
+        return `${API_URL}/projects?populate=*&sort[0]=sales:`;
       });
     }
   };
@@ -56,5 +73,7 @@ export const useSortSwitcher = () => {
     ascDescSales,
     handleSortSwitcher,
     setAscDesc,
+    testUrl,
+    setTestUrl,
   };
 };

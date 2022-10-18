@@ -6,13 +6,21 @@ import { useFetcher } from "../hooks/useFetcher";
 export default function Pagination(props) {
   const { pageNumber, setPageNumber } = useContext(PageNumberContext);
   const token = props.props.token;
-  const url = `${API_URL}/projects?populate=*&sort[0]=updatedAt:desc&pagination[page]=${pageNumber}&pagination[pageSize]=10`;
+  const url =
+    props.props.endpointType == "sort"
+      ? `${API_URL}/projects?populate=*&sort[0]=updatedAt:desc&pagination[page]=${pageNumber}&pagination[pageSize]=10`
+      : `${API_URL}/projects?populate=*&filters[${props.props.field}][$eqi]=${props.props.value}`;
+
   const { data, error } = useFetcher(url, token);
   const PageCount = data ? data.meta.pagination.pageCount : "";
+  console.log(pageNumber);
   //mapメソッドでpageCount分の数の配列を返す。//0,1,2,3,4
   const range = [...Array(PageCount).map((_, i) => PageCount + i)];
 
   const handleClickPageNumber = (e) => {
+    props.props.setEndpointType(() => {
+      return "sort";
+    });
     if (e == "prevButton") {
       setPageNumber((prev) => prev - 1);
     } else if (e == "nextButton") {
@@ -21,6 +29,7 @@ export default function Pagination(props) {
       setPageNumber(e);
     }
   };
+  console.log(props.props.endpointType);
 
   return data ? (
     <ul className="flex justify-center items-center -space-x-px mt-4">
