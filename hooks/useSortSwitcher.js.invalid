@@ -1,0 +1,79 @@
+import { useState } from "react";
+import { API_URL } from "../config";
+
+export const useSortSwitcher = () => {
+  const [orderBy, setOrderBy] = useState("updatedAt");
+  const [ascDesc, setAscDesc] = useState("desc");
+  const [ascDescId, setAscDescId] = useState("desc");
+  const [ascDescCreatedAt, setAscDescCreatedAt] = useState("desc");
+  const [ascDescUpdatedAt, setAscDescUpdatedAt] = useState("desc");
+  const [ascDescSales, setAscDescSales] = useState("desc");
+  const [testUrl, setTestUrl] = useState(
+    `${API_URL}/projects?populate=*&sort[0]=updatedAt:`
+  );
+
+  const handleSortSwitcher = (e) => {
+    setOrderBy(() => {
+      return e;
+    });
+
+    if (e == "id") {
+      setAscDescId((prevAscDescId) => {
+        if (prevAscDescId == "asc") {
+          return "desc";
+        } else {
+          return "asc";
+        }
+      });
+      setTestUrl(() => {
+        return `${API_URL}/projects?populate=*&sort[0]=id:`;
+      });
+    } else if (e == "createdAt") {
+      setAscDescCreatedAt((prevAscDescCreatedAt) => {
+        if (prevAscDescCreatedAt == "asc") {
+          return "desc";
+        } else {
+          return "asc";
+        }
+      });
+      setTestUrl(() => {
+        return `${API_URL}/projects?populate=*&sort[0]=createdAt:`;
+      });
+    } else if (e == "updatedAt") {
+      setAscDescUpdatedAt((prevAscDescUpdatedAt) => {
+        if (prevAscDescUpdatedAt == "asc") {
+          return "desc";
+        } else {
+          return "asc";
+        }
+      });
+      setTestUrl(() => {
+        return `${API_URL}/projects?populate=*&sort[0]=updatedAt:`;
+      });
+    } else if (e == "sales") {
+      setAscDescSales((prevAscDescSales) => {
+        if (prevAscDescSales == "asc") {
+          return "desc";
+        } else {
+          return "asc";
+        }
+      });
+      setTestUrl(() => {
+        return `${API_URL}/projects?populate=*&sort[0]=sales:`;
+      });
+    }
+  };
+
+  return {
+    orderBy,
+    ascDesc,
+    ascDescId,
+    ascDescCreatedAt,
+    ascDescUpdatedAt,
+    ascDescSales,
+    handleSortSwitcher,
+    setAscDesc,
+    testUrl,
+    setTestUrl,
+  };
+};

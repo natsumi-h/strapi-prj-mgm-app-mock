@@ -1,115 +1,26 @@
-// import * as React from "react";
 import Header from "../components/Header";
-import { API_URL } from "../config";
-import Link from "next/link";
 import cookie from "cookie";
-import { useRouter } from "next/router";
-import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
-import dayjs from "dayjs";
 import Footer from "../components/Footer";
+import { useContext } from "react";
+import Pagination from "../components/Pagination";
+import ProjectList from "../components/ProjectList";
+import Filter from "../components/Filter";
 
-// https://tailwindui.com/components/application-ui/lists/tables
-
-export default function ProjectsList(projects) {
-  const projectsList = projects.projects.data;
-  // console.log(projectsList);
-
+export default function ProjectsList(props) {
+  const meta = props.meta;
   const { user } = useContext(AuthContext);
-  // console.log(user);
-  //const router = useRouter();
-  //!user &&  router.push("/account/login");
-
-  //案件一覧を更新日順に取得
-  // const sortedProjectsList = projectsList.sort((a, b) => {
-  //   a = new Date(a.attributes.updatedAt);
-  //   b = new Date(b.attributes.updatedAt);
-  //   return b - a;
-  // });
-
-  const sortedProjectsList = !user
-    ? null
-    : projectsList.sort((a, b) => {
-        a = new Date(a.attributes.updatedAt);
-        b = new Date(b.attributes.updatedAt);
-        return b - a;
-      });
-  // console.log(sortedProjectsList);
 
   return user ? (
     <>
       <Header />
-      <div className="overflow-x-auto relative">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="text-center py-3 px-6">
-                ID
-              </th>
-              <th scope="col" className="text-center py-3 px-6">
-                Created On
-              </th>
-              <th scope="col" className="text-center py-3 px-6">
-                Updated On
-              </th>
-              <th scope="col" className="text-center py-3 px-6">
-                Project Name
-              </th>
-              <th scope="col" className="text-center py-3 px-6">
-                PM
-              </th>
-              <th scope="col" className="text-center py-3 px-6">
-                Status
-              </th>
-              <th scope="col" className="text-center py-3 px-6">
-                Area
-              </th>
-              <th scope="col" className="text-center py-3 px-6">
-                Branch
-              </th>
-              <th scope="col" className="text-center py-3 px-6">
-                Sales($)
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {sortedProjectsList.map((project) => (
-              <Link
-                key={project.id}
-                className="cursor-pointer"
-                href={`/detail/${project.id}`}
-              >
-                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 cursor-pointer hover:bg-blue-50">
-                  <td className="py-4 px-6">{project.id}</td>
-                  <td className="py-4 px-6">
-                    {dayjs(project.attributes.createdAt).format("YYYY/MM/DD")}
-                  </td>
-                  <td className="py-4 px-6">
-                    {dayjs(project.attributes.updatedAt).format("YYYY/MM/DD")}
-                  </td>
-                  <td className="py-4 px-6">
-                    {project.attributes.projectName}
-                  </td>
-                  {/* <td className="py-4 px-6">
-                    {project.attributes.pm.data
-                      ? project.attributes.pm.data.attributes.username
-                      : ""}
-                  </td> */}
-                  <td className="py-4 px-6">{project.attributes.status}</td>
-                  <td className="py-4 px-6">{project.attributes.area}</td>
-                  <td className="py-4 px-6">{project.attributes.branch}</td>
-                  <td className="py-4 px-6">{project.attributes.sales}</td>
-                </tr>
-              </Link>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Filter props={props} />
+      <ProjectList props={props} />
+      <Pagination props={props} />
       <Footer />
     </>
   ) : (
-    <p>Unauthorized User</p>
+    <></>
   );
 }
 
@@ -118,20 +29,60 @@ export async function getServerSideProps({ req }) {
     return cookie.parse(req ? req.headers.cookie || "" : "");
   };
   const { token } = parseCookies(req);
-  console.log({ token });
 
-  const res = await fetch(`${API_URL}/projects?populate=*`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  const projects = await res.json();
+  return token
+    ? {
+        props: {
+          token,
+        },
+      }
+    : {
+        props: {},
+      };
+
+  // const res = await fetch(
+  //   `${API_URL}/projects?populate=*`,
+  //   {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   }
+  // );
+
+  // const projects = await res.json();
+
+  // const meta = projects.meta;
+
+  // return meta !== undefined
+  // ? {
+  //     props: {
+  //       meta,
+  //       token,
+  //     },
+  //   }
+  // : {
+  //     props: {
+  //       token,
+  //     },
+  //   };
+
   // console.log(projects.error.name);
-  console.log(projects);
+  // console.log(projects);
+  // const projectsData = projects.data;
 
-  return {
-    props: {
-      projects,
-    },
-  };
+  // console.log(meta);
+
+  // return meta !== undefined
+  //   ? {
+  //       props: {
+  //         projects,
+  //         meta,
+  //         token,
+  //       },
+  //     }
+  //   : {
+  //       props: {
+  //         projects,
+  //       },
+  //     };
 }
