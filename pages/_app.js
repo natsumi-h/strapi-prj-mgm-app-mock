@@ -5,6 +5,7 @@ import { AuthProvider } from "../context/AuthContext";
 import "../styles/globals.css";
 import { createContext, useState } from "react";
 import { useEndpointSwitcher } from "../hooks/useEndpointSwitcher";
+import { useModalStateSwitcher } from "../hooks/useModalStateSwitcher";
 
 export const PageNumberContext = createContext({
   pageNumber: "1",
@@ -16,12 +17,13 @@ export const PageNumberContext = createContext({
 export default function MyApp({ Component, pageProps }) {
   const [pageNumber, setPageNumber] = useState("1");
   const endpointSwitcher = useEndpointSwitcher();
+  const modalStateSwitcher = useModalStateSwitcher();
 
   return (
     <AuthProvider>
       <PageNumberContext.Provider value={{ pageNumber, setPageNumber }}>
         <Head />
-        <Component {...pageProps} {...endpointSwitcher} />
+        <Component {...pageProps} {...endpointSwitcher} {...modalStateSwitcher}/>
       </PageNumberContext.Provider>
     </AuthProvider>
   );

@@ -15,7 +15,7 @@ export default function Filter(props) {
   //   });
   // };
 
-  console.log(branch);
+  // console.log(branch);
   // console.log(data);
 
   const filterTypes = [
@@ -135,7 +135,7 @@ export default function Filter(props) {
           </div>
         ))}
       </form>
-      <button className="underline">Clear filter</button>
+      <button className="underline text-sm">Clear filter</button>
     </div>
   );
 }

@@ -273,8 +273,17 @@ export default function ProjectList(props) {
                       : ""}
                   </td>
                   <td className="py-4 px-6">{project.attributes.status}</td>
-                  <td className="py-4 px-6">{project.attributes.area}</td>
-                  <td className="py-4 px-6">{project.attributes.branch}</td>
+                  <td className="py-4 px-6">
+                    {project.attributes.related_area.data
+                      ? project.attributes.related_area.data.attributes.areaName
+                      : ""}
+                  </td>
+                  <td className="py-4 px-6">
+                    {project.attributes.related_branch.data
+                      ? project.attributes.related_branch.data.attributes
+                          .branchName
+                      : ""}
+                  </td>
                   <td className="py-4 px-6">{project.attributes.sales}</td>
                 </tr>
               </Link>

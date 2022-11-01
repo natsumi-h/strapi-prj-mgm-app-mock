@@ -32,3 +32,10 @@ yarn-error.log*
 .vercel
 
 yarn.lock
+
+
+old-detail.js.old
+old-edit.js.old
+create.js.old
+useSearchSwitcher.js.invalid
+useSortSwitcher.js.invalid
