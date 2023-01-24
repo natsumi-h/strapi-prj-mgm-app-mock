@@ -1,60 +1,58 @@
 import Link from "next/link";
 import dayjs from "dayjs";
-import { useContext, useEffect, useState } from "react";
-import { PageNumberContext } from "../pages/_app";
-import { API_URL } from "../config";
 import { useFetcher } from "../hooks/useFetcher";
 import Spinner from "./Spinner";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+// import { PageNumberContext } from "../pages/_app";
+// import { useContext, useEffect } from "react";
+// import { API_URL } from "../config";
+import {
+  newAscDescId,
+  newAscDescCreatedAt,
+  newAscDescUpdatedAt,
+  newAscDescSales,
+} from "../state/endpointSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function ProjectList(props) {
-  const setAscDesc = props.props.setAscDesc;
-  const { pageNumber, setPageNumber } = useContext(PageNumberContext);
-  const token = props.props.token;
-  const [endpointUrl, setEndpointUrl] = useState(
-    `${API_URL}/projects?populate=*&sort[0]=${props.props.orderBy}:${props.props.ascDesc}`
-  );
-  useEffect(() => {
-    setEndpointUrl(() => {
-      if (props.props.endpointType == "search") {
-        return `${API_URL}/projects?populate=*&filters[${props.props.field}][$eqi]=${props.props.value}`;
-      } else if (props.props.endpointType == "sort") {
-        return `${API_URL}/projects?populate=*&sort[0]=${props.props.orderBy}:${props.props.ascDesc}&pagination[page]=${pageNumber}&pagination[pageSize]=10`;
-      }
-    });
-  }, [
-    props.props.field,
-    props.props.value,
-    props.props.orderBy,
-    props.props.ascDesc,
-    pageNumber,
-  ]);
-  const url = endpointUrl;
+  // 分割代入
+  // const {
+  //   token,
+  //   // ascDescId,
+  //   // ascDescSales,
+  //   // ascDescUpdatedAt,
+  //   // ascDescCreatedAt,
+  //   // handleEndpointSwitcher,
+  //   // endpointUrl,
+  //   // pageNumber,
+  //   // field,
+  //   // value,
+  // } = props.props;
 
-  const { data, error } = useFetcher(url, token);
+  // const ascDescId = useSelector((state) => state.endpoint.ascDescId);
+  // const ascDescCreatedAt = useSelector(
+  //   (state) => state.endpoint.ascDescCreatedAt
+  // );
+  // const ascDescUpdatedAt = useSelector(
+  //   (state) => state.endpoint.ascDescUpdatedAt
+  // );
+  // const ascDescSales = useSelector((state) => state.endpoint.ascDescSales);
+
+  // 分割代入
+  const {
+    ascDescId,
+    ascDescCreatedAt,
+    ascDescUpdatedAt,
+    ascDescSales,
+    endpointUrl,
+  } = useSelector((state) => state.endpoint);
+
+  const { token } = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
+
+  const { data, error } = useFetcher(endpointUrl, token);
   const projectsList = data ? data.data : "";
-
-  useEffect(() => {
-    setAscDesc(() => {
-      return props.props.ascDescId;
-    });
-  }, [props.props.ascDescId]);
-  useEffect(() => {
-    setAscDesc(() => {
-      return props.props.ascDescSales;
-    });
-  }, [props.props.ascDescSales]);
-  useEffect(() => {
-    setAscDesc(() => {
-      return props.props.ascDescUpdatedAt;
-    });
-  }, [props.props.ascDescUpdatedAt]);
-  useEffect(() => {
-    setAscDesc(() => {
-      return props.props.ascDescCreatedAt;
-    });
-  }, [props.props.ascDescCreatedAt]);
-  console.log(data);
 
   // https://tailwindui.com/components/application-ui/lists/tables
   if (!error && !data) {
@@ -68,15 +66,19 @@ export default function ProjectList(props) {
                   <div className="flex items-center gap-2 justify-center">
                     <p>ID</p>
                     <button
-                      onClick={(e) =>
-                        props.props.handleEndpointSwitcher("id", "sort")
-                      }
+                      // onClick={(e) => handleEndpointSwitcher("id", "sort")}
+                      onClick={() => dispatch(newAscDescId())}
                     >
-                      {props.props.ascDescId == "desc" ? (
+                      {ascDescId == "desc" ? (
                         <IoIosArrowUp />
                       ) : (
                         <IoIosArrowDown />
                       )}
+                      {/* {ascDescId == "desc" ? (
+                        <IoIosArrowUp />
+                      ) : (
+                        <IoIosArrowDown />
+                      )} */}
                     </button>
                   </div>
                 </th>
@@ -84,11 +86,12 @@ export default function ProjectList(props) {
                   <div className="flex items-center gap-2 justify-center">
                     <p>Created On</p>
                     <button
-                      onClick={(e) =>
-                        props.props.handleEndpointSwitcher("createdAt", "sort")
-                      }
+                      // onClick={(e) =>
+                      //   handleEndpointSwitcher("createdAt", "sort")
+                      // }
+                      onClick={() => dispatch(newAscDescCreatedAt())}
                     >
-                      {props.props.ascDescCreatedAt == "desc" ? (
+                      {ascDescCreatedAt == "desc" ? (
                         <IoIosArrowUp />
                       ) : (
                         <IoIosArrowDown />
@@ -100,11 +103,12 @@ export default function ProjectList(props) {
                   <div className="flex items-center gap-2 justify-center">
                     <p>Updated On</p>
                     <button
-                      onClick={(e) =>
-                        props.props.handleEndpointSwitcher("updatedAt", "sort")
-                      }
+                      // onClick={(e) =>
+                      //   handleEndpointSwitcher("updatedAt", "sort")
+                      // }
+                      onClick={() => dispatch(newAscDescUpdatedAt())}
                     >
-                      {props.props.ascDescUpdatedAt == "desc" ? (
+                      {ascDescUpdatedAt == "desc" ? (
                         <IoIosArrowUp />
                       ) : (
                         <IoIosArrowDown />
@@ -135,11 +139,10 @@ export default function ProjectList(props) {
                   <div className="flex items-center gap-2 justify-center">
                     <p>Sales</p>
                     <button
-                      onClick={(e) =>
-                        props.props.handleEndpointSwitcher("sales", "sort")
-                      }
+                      // onClick={(e) => handleEndpointSwitcher("sales", "sort")}
+                      onClick={() => dispatch(newAscDescSales())}
                     >
-                      {props.props.ascDescSales == "desc" ? (
+                      {ascDescSales == "desc" ? (
                         <IoIosArrowUp />
                       ) : (
                         <IoIosArrowDown />
@@ -167,11 +170,17 @@ export default function ProjectList(props) {
                 <div className="flex items-center gap-2 justify-center">
                   <p>ID</p>
                   <button
-                    onClick={(e) =>
-                      props.props.handleEndpointSwitcher("id", "sort")
-                    }
+                    // onClick={(e) =>
+                    //   handleEndpointSwitcher("id", "sort", pageNumber)
+                    // }
+                    onClick={() => dispatch(newAscDescId())}
                   >
-                    {props.props.ascDescId == "desc" ? (
+                    {/* {ascDescId == "desc" ? (
+                      <IoIosArrowUp />
+                    ) : (
+                      <IoIosArrowDown />
+                    )} */}
+                    {ascDescId == "desc" ? (
                       <IoIosArrowUp />
                     ) : (
                       <IoIosArrowDown />
@@ -183,11 +192,12 @@ export default function ProjectList(props) {
                 <div className="flex items-center gap-2 justify-center">
                   <p>Created On</p>
                   <button
-                    onClick={(e) =>
-                      props.props.handleEndpointSwitcher("createdAt", "sort")
-                    }
+                    // onClick={(e) =>
+                    //   handleEndpointSwitcher("createdAt", "sort", pageNumber)
+                    // }
+                    onClick={() => dispatch(newAscDescCreatedAt())}
                   >
-                    {props.props.ascDescCreatedAt == "desc" ? (
+                    {ascDescCreatedAt == "desc" ? (
                       <IoIosArrowUp />
                     ) : (
                       <IoIosArrowDown />
@@ -199,11 +209,10 @@ export default function ProjectList(props) {
                 <div className="flex items-center gap-2 justify-center">
                   <p>Updated On</p>
                   <button
-                    onClick={(e) =>
-                      props.props.handleEndpointSwitcher("updatedAt", "sort")
-                    }
+                    // onClick={(e) => handleEndpointSwitcher("updatedAt", "sort")}
+                    onClick={() => dispatch(newAscDescUpdatedAt())}
                   >
-                    {props.props.ascDescUpdatedAt == "desc" ? (
+                    {ascDescUpdatedAt == "desc" ? (
                       <IoIosArrowUp />
                     ) : (
                       <IoIosArrowDown />
@@ -234,11 +243,12 @@ export default function ProjectList(props) {
                 <div className="flex items-center gap-2 justify-center">
                   <p>Sales</p>
                   <button
-                    onClick={(e) =>
-                      props.props.handleEndpointSwitcher("sales", "sort")
-                    }
+                    // onClick={(e) =>
+                    //   handleEndpointSwitcher("sales", "sort", pageNumber)
+                    // }
+                    onClick={() => dispatch(newAscDescSales())}
                   >
-                    {props.props.ascDescSales == "desc" ? (
+                    {ascDescSales == "desc" ? (
                       <IoIosArrowUp />
                     ) : (
                       <IoIosArrowDown />

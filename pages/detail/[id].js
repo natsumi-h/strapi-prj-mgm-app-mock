@@ -9,11 +9,13 @@ import Link from "next/link";
 import Modal from "../../components/Modal";
 import { useFetcher } from "../../hooks/useFetcher";
 import Spinner from "../../components/Spinner";
+import { useSelector } from "react-redux";
 
 export default function BasicList(props) {
-  const token = props.token;
+  // const token = props.token;
   // console.log(props.project);
 
+  const { token } = useSelector((state) => state.auth);
   const projectUrl = `${API_URL}/projects/${props.id}?populate=*`;
   const { data: project, error: projectError } = useFetcher(projectUrl, token);
   // console.log(project);
@@ -30,7 +32,7 @@ export default function BasicList(props) {
   } else {
     return (
       <>
-        <Header />
+        <Header props={props} />
         <Modal props={props} id={props.id} />
         <div className="mx-auto w-9/12">
           <dl className=" text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
@@ -139,7 +141,7 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      token,
+      // token,
       id,
     },
   };

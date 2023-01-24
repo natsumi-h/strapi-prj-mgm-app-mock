@@ -1,35 +1,51 @@
-import { useContext } from "react";
-import { PageNumberContext } from "../pages/_app";
 import { API_URL } from "../config";
 import { useFetcher } from "../hooks/useFetcher";
+import { useDispatch, useSelector } from "react-redux";
+import { newPageNumber } from "../state/endpointSlice";
+// import { newAscDescCreatedAt } from "../state/endpointSlice";
 
 export default function Pagination(props) {
-  const { pageNumber, setPageNumber } = useContext(PageNumberContext);
-  const token = props.props.token;
-  const url =
-    props.props.endpointType == "sort"
-      ? `${API_URL}/projects?populate=*&sort[0]=updatedAt:desc&pagination[page]=${pageNumber}&pagination[pageSize]=10`
-      : `${API_URL}/projects?populate=*&filters[${props.props.field}][$eqi]=${props.props.value}`;
+  // const {
+  //   // token,
+  //   // endpointType,
+  //   // setEndpointType,
+  //   field,
+  //   value,
+  //   // pageNumber,
+  //   // setPageNumber,
+  // } = props.props;
+
+  // 分割代入
+  const { pageNumber, endpointType } = useSelector((state) => state.endpoint);
+  const { token } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  // レコード数をカウントするためだけのURL
+  // const url =
+  //   endpointType == "sort"
+  //     ? `${API_URL}/projects?populate=*&sort[0]=updatedAt:desc&pagination[page]=${pageNumber}&pagination[pageSize]=10`
+  //     : `${API_URL}/projects?populate=*&filters[${field}][$eqi]=${value}`;
+
+  const url = `${API_URL}/projects?populate=*&sort[0]=updatedAt:desc&pagination[page]=${pageNumber}&pagination[pageSize]=10`;
 
   const { data, error } = useFetcher(url, token);
   const PageCount = data ? data.meta.pagination.pageCount : "";
-  console.log(pageNumber);
   //mapメソッドでpageCount分の数の配列を返す。//0,1,2,3,4
   const range = [...Array(PageCount).map((_, i) => PageCount + i)];
 
-  const handleClickPageNumber = (e) => {
-    props.props.setEndpointType(() => {
-      return "sort";
-    });
-    if (e == "prevButton") {
-      setPageNumber((prev) => prev - 1);
-    } else if (e == "nextButton") {
-      setPageNumber((prev) => prev + 1);
-    } else {
-      setPageNumber(e);
-    }
-  };
-  console.log(props.props.endpointType);
+  // const handleClickPageNumber = (e) => {
+  //   setEndpointType(() => {
+  //     return "sort";
+  //   });
+
+  //   if (e == "prevButton") {
+  //     setPageNumber((prev) => prev - 1);
+  //   } else if (e == "nextButton") {
+  //     setPageNumber((prev) => prev + 1);
+  //   } else {
+  //     setPageNumber(e);
+  //   }
+  // };
 
   return data ? (
     <ul className="flex justify-center items-center -space-x-px mt-4">
@@ -53,7 +69,8 @@ export default function Pagination(props) {
           </div>
         ) : (
           <button
-            onClick={() => handleClickPageNumber("prevButton")}
+            // onClick={() => handleClickPageNumber("prevButton")}
+            onClick={() => dispatch(newPageNumber("prevButton"))}
             href="#"
             className="block py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
           >
@@ -83,7 +100,8 @@ export default function Pagination(props) {
           ) : (
             <button
               className="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-              onClick={() => handleClickPageNumber(index + 1)}
+              // onClick={() => handleClickPageNumber(index + 1)}
+              onClick={() => dispatch(newPageNumber(index + 1))}
             >
               {index + 1}
             </button>
@@ -110,7 +128,8 @@ export default function Pagination(props) {
           </div>
         ) : (
           <button
-            onClick={() => handleClickPageNumber("nextButton")}
+            // onClick={() => handleClickPageNumber("nextButton")}
+            onClick={() => dispatch(newPageNumber("nextButton"))}
             href="#"
             className="block py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
           >

@@ -45,7 +45,7 @@ export default async (req, res) => {
         })
       );
 
-      res.status(200).json({ user: data.user });
+      res.status(200).json({ user: data.user, jwt: data.jwt });
     } else {
       res.status(data.error.status).json({ message: data.error.message });
       //   res.status(data.statusCode).json("");

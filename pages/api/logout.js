@@ -1,4 +1,4 @@
-import { API_URL } from "../../config";
+// import { API_URL } from "../../config";
 import cookie from "cookie";
 
 export default async (req, res) => {

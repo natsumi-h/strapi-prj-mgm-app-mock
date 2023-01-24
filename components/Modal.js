@@ -1,10 +1,12 @@
 import { useRouter } from "next/router";
 import { API_URL } from "../config";
+import { useSelector } from "react-redux";
 
 export default function Modal(props) {
   const router = useRouter();
   // console.log(props);
-  const token = props.props.token;
+  const { token } = useSelector((state) => state.auth);
+  // const token = props.props.token;
   const id = props.id ? props.id : "";
 
   const deleteEvent = async (e) => {

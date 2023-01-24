@@ -8,11 +8,12 @@ import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import { useFetcher } from "../../hooks/useFetcher";
 import Spinner from "../../components/Spinner";
+import { useSelector } from "react-redux";
 
 export default function CreateProjectPage2(props) {
-  const token = props.token;
+  // const token = props.token;
   // console.log(props.project);
-
+  const { token } = useSelector((state) => state.auth);
   const pmUrl = `${API_URL}/users`;
   const { data: pms, error: pmsError } = useFetcher(pmUrl, token);
 
@@ -127,7 +128,7 @@ export default function CreateProjectPage2(props) {
   } else {
     return (
       <>
-        <Header />
+        <Header props={props} />
         <Modal props={props} />
         <form className="w-9/12 mx-auto" onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-6">
