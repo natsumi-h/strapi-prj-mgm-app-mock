@@ -1,11 +1,21 @@
 // import { API_URL } from "../config";
 // import { useFetcher } from "../hooks/useFetcher";
 import { useState, useEffect } from "react";
+import { useFetcher } from "../hooks/useFetcher";
+import { API_URL } from "../config";
 
 export default function Filter(props) {
   const field = "pm";
   const [branch, setBranch] = useState("");
-  const token = props.props.token;
+  // const token = props.props.token;
+  const {
+    handleEndpointSwitcher,
+    pageNumber,
+    token,
+    handleClearFilter,
+    endpointUrl,
+  } = props.props;
+  // console.log(pageNumber);
   // const url = `${API_URL}/projects?filters[branch][$eqi]=${branch}`;
   // const { data, error } = useFetcher(url, token);
 
@@ -15,8 +25,15 @@ export default function Filter(props) {
   //   });
   // };
 
-  // console.log(branch);
-  // console.log(data);
+  const areaUrl = `${API_URL}/areas?populate=*`;
+  const { data: areas, error: areasError } = useFetcher(areaUrl, token);
+  const areaArray = !areas
+    ? ""
+    : areas.data.map((area) => ({
+        text: area.attributes.areaName,
+        value: area.attributes.areaName,
+      }));
+  console.log(areaArray);
 
   const filterTypes = [
     {
@@ -30,21 +47,23 @@ export default function Filter(props) {
         { text: "Lost", value: "Lost" },
       ],
     },
-    {
-      field: "updatedAt",
-      text: "Updated On",
-      options: [
-        { text: "Area A", value: "Area A" },
-        { text: "Area B", value: "Area B" },
-      ],
-    },
+    // {
+    //   field: "updatedAt",
+    //   text: "Updated On",
+    //   options: [
+    //     { text: "Area A", value: "Area A" },
+    //     { text: "Area B", value: "Area B" },
+    //   ],
+    // },
     {
       field: "area",
       text: "Area",
-      options: [
-        { text: "option-1", value: "option-1" },
-        { text: "option-2", value: "option-2" },
-      ],
+      // options: [
+      //   { text: "Area A", value: "Area A" },
+      //   { text: "Area B", value: "Area B" },
+      //   { text: "Area C", value: "Area C" },
+      // ],
+      options: areaArray,
     },
     {
       field: "branch",
@@ -66,16 +85,18 @@ export default function Filter(props) {
               data-dropdown-toggle="dropdown"
               className="flex-shrink-0 z-10 inline-flex items-center rounded-lg py-2.5 px-4 text-sm font-medium text-center text-gray-900  border border-gray-300 dark:border-gray-700 dark:text-white  hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
               type="button"
-              onChange={(e) => props.props.handleEndpointSwitcher(e, "search")}
+              onChange={(e) => handleEndpointSwitcher(e, "search", pageNumber)}
             >
               <option hidden>{filterBy.text}</option>
-              {filterBy.options.map((option) => {
-                return (
-                  <option key="value" value={option.value}>
-                    {option.text}
-                  </option>
-                );
-              })}
+              {!filterBy.options
+                ? ""
+                : filterBy.options.map((option) => {
+                    return (
+                      <option key="value" value={option.value}>
+                        {option.text}
+                      </option>
+                    );
+                  })}
               <svg
                 aria-hidden="true"
                 className="ml-1 w-4 h-4"
@@ -135,7 +156,9 @@ export default function Filter(props) {
           </div>
         ))}
       </form>
-      <button className="underline text-sm">Clear filter</button>
+      <button className="underline text-sm" onClick={() => handleClearFilter()}>
+        Clear filter
+      </button>
     </div>
   );
 }

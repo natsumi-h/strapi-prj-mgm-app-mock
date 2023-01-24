@@ -1,28 +1,41 @@
 import { useState, useContext, useEffect } from "react";
 import Link from "next/link";
-import AuthContext from "../../context/AuthContext";
+// import AuthContext from "../../context/AuthContext";
 import { useRouter } from "next/router";
 import Header from "../../components/Header";
+import { useDispatch, useSelector } from "react-redux";
+import { login, setError } from "../../state/authSlice";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { login, error} = useContext(AuthContext);
+  const dispatch = useDispatch();
+  // 分割代入
+  const { user, error } = useSelector((state) => state.auth);
+  // const { login, error } = useContext(AuthContext);
 
   const router = useRouter();
   // user && router.push("/");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // console.log({ email, password });
     //↓AuthContextのlogin関数が呼び出されて、そこにemail,passwordが入る
-    login({ email, password });
-    // router.push("/");
+    // login({ email, password });
+    dispatch(login({ email, password }));
   };
 
-  return (
+  // useEffect(() => {
+  //   if (user) {
+  //     // router.push("/");
+  //     dispatch(setError(null));
+  //   } else if (error) {
+  //     console.log(error);
+  //   }
+  // }, [error, user]);
 
+  return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <div className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
@@ -102,6 +115,11 @@ export default function LoginPage() {
                 value="login"
                 className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               />
+              {error && (
+                <p className="font-medium text-red-600  dark:text-red-500">
+                  {error}
+                </p>
+              )}
 
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Don’t have an account yet?{" "}
@@ -119,6 +137,5 @@ export default function LoginPage() {
         </div>
       </div>
     </section>
-
   );
 }

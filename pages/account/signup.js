@@ -1,7 +1,10 @@
 // https://flowbite.com/blocks/marketing/register/
 import { useState, useContext, useEffect } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
-import AuthContext from "../../context/AuthContext";
+// import AuthContext from "../../context/AuthContext";
+import { useSelector, useDispatch } from "react-redux";
+import { register } from "../../state/authSlice";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -9,7 +12,11 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
-  const { register, error } = useContext(AuthContext);
+  const dispatch = useDispatch();
+  // 分割代入
+  const { user } = useSelector((state) => state.auth);
+  const router = useRouter();
+  // const { register, error } = useContext(AuthContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -19,7 +26,8 @@ export default function RegisterPage() {
     }
     // console.log({ username, email, password });
     //↓AuthContextのregister関数が呼び出されている
-    register({ username, email, password });
+    dispatch(register({ username, email, password }));
+    // router.push("/");
   };
 
   return (

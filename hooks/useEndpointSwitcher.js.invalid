@@ -1,0 +1,175 @@
+import { useState, useEffect } from "react";
+import { API_URL } from "../config";
+
+
+export const useEndpointSwitcher = () => {
+  const [endpointType, setEndpointType] = useState("sort");
+  const [orderBy, setOrderBy] = useState("updatedAt");
+  const [ascDesc, setAscDesc] = useState("desc");
+  const [endpointUrl, setEndpointUrl] = useState(
+    `${API_URL}/projects?populate=*&sort[0]=${orderBy}:${ascDesc}`
+  );
+  const [field, setField] = useState("");
+  const [value, setValue] = useState("");
+  const [ascDescId, setAscDescId] = useState("desc");
+  const [ascDescCreatedAt, setAscDescCreatedAt] = useState("desc");
+  const [ascDescUpdatedAt, setAscDescUpdatedAt] = useState("desc");
+  const [ascDescSales, setAscDescSales] = useState("desc");
+  const [pageNumber, setPageNumber] = useState(1);
+
+  useEffect(() => {
+    setEndpointUrl(() => {
+      if (endpointType == "search") {
+        return `${API_URL}/projects?populate=*&filters[${field}][$eqi]=${value}`;
+      } else if (endpointType == "sort") {
+        return `${API_URL}/projects?populate=*&sort[0]=${orderBy}:${ascDesc}&pagination[page]=${pageNumber}&pagination[pageSize]=10`;
+      }
+    });
+  }, [field, value, orderBy, ascDesc, pageNumber, endpointType]);
+
+  useEffect(() => {
+    setAscDesc(() => {
+      return ascDescId;
+    });
+  }, [ascDescId]);
+  useEffect(() => {
+    setAscDesc(() => {
+      return ascDescSales;
+    });
+  }, [ascDescSales]);
+  useEffect(() => {
+    setAscDesc(() => {
+      return ascDescUpdatedAt;
+    });
+  }, [ascDescUpdatedAt]);
+  useEffect(() => {
+    setAscDesc(() => {
+      return ascDescCreatedAt;
+    });
+  }, [ascDescCreatedAt]);
+
+  const handleClearFilter = () => {
+    setEndpointType(() => {
+      return "sort";
+    });
+    setPageNumber(() => {
+      return 1;
+    });
+    setOrderBy(() => {
+      return "updatedAt";
+    });
+    setAscDesc(() => {
+      return "desc";
+    });
+  };
+
+  const handleEndpointSwitcher = (e, endpointType) => {
+    setPageNumber(() => {
+      return 1;
+    });
+    if (endpointType == "search") {
+      setEndpointType(() => {
+        return "search";
+      });
+      setField(() => {
+        return e.target.id;
+      });
+      setValue(() => {
+        return e.target.value;
+      });
+      console.log(value);
+      console.log(field);
+    } else if (endpointType == "sort") {
+      setEndpointType(() => {
+        return "sort";
+      });
+      setOrderBy(() => {
+        return e;
+      });
+      if (e == "id") {
+        setAscDescId((prevAscDescId) => {
+          if (prevAscDescId == "asc") {
+            return "desc";
+          } else {
+            return "asc";
+          }
+        });
+        setAscDescCreatedAt(() => {
+          return "desc";
+        });
+        setAscDescUpdatedAt(() => {
+          return "desc";
+        });
+        setAscDescSales(() => {
+          return "desc";
+        });
+      } else if (e == "createdAt") {
+        setAscDescCreatedAt((prevAscDescCreatedAt) => {
+          if (prevAscDescCreatedAt == "asc") {
+            return "desc";
+          } else {
+            return "asc";
+          }
+        });
+        setAscDescId(() => {
+          return "desc";
+        });
+        setAscDescUpdatedAt(() => {
+          return "desc";
+        });
+        setAscDescSales(() => {
+          return "desc";
+        });
+      } else if (e == "updatedAt") {
+        setAscDescUpdatedAt((prevAscDescUpdatedAt) => {
+          if (prevAscDescUpdatedAt == "asc") {
+            return "desc";
+          } else {
+            return "asc";
+          }
+        });
+        setAscDescId(() => {
+          return "desc";
+        });
+        setAscDescCreatedAt(() => {
+          return "desc";
+        });
+        setAscDescSales(() => {
+          return "desc";
+        });
+      } else if (e == "sales") {
+        setAscDescSales((prevAscDescSales) => {
+          if (prevAscDescSales == "asc") {
+            return "desc";
+          } else {
+            return "asc";
+          }
+        });
+        setAscDescId(() => {
+          return "desc";
+        });
+        setAscDescCreatedAt(() => {
+          return "desc";
+        });
+        setAscDescUpdatedAt(() => {
+          return "desc";
+        });
+      }
+    }
+  };
+
+  return {
+    ascDescId,
+    ascDescCreatedAt,
+    ascDescUpdatedAt,
+    ascDescSales,
+    handleEndpointSwitcher,
+    endpointUrl,
+    endpointType,
+    setEndpointType,
+    setEndpointUrl,
+    pageNumber,
+    setPageNumber,
+    handleClearFilter,
+  };
+};
